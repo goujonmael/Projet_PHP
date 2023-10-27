@@ -79,6 +79,7 @@
 
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Récupération des données du formulaire HTML
+                $civilite= $_POST['civilite'];
                 $nom = $_POST['nom'];
                 $prenom = $_POST['prenom'];
                 $adresse = $_POST['adresse'];
@@ -87,12 +88,14 @@
                 $numero_securite_sociale = $_POST['numero_securite_sociale'];
                 $idMedecin = $_POST['idMedecin']; // Ajoutez le champ de sélection du médecin référent
 
-                $sql = "INSERT INTO patient (Nom, Prenom, Adresse, Date_de_naissance, Lieu_de_naissance, Numero_Securite_Sociale, idMedecin) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO patient (`Civilite`, `Nom`, `Prenom`, `Adresse`, `Date_de_naissance`, `Lieu_de_naissance`, `Numero_Securite_Sociale`, `idMedecin`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+
                 $stmt = $linkpdo->prepare($sql);
                 if ($stmt == false) {
                     die("Erreur prepare");
                 }
-                $test = $stmt->execute([$nom, $prenom, $adresse, $date_de_naissance, $lieu_de_naissance, $numero_securite_sociale, $idMedecin]);
+                $test = $stmt->execute([$civilite, $nom, $prenom, $adresse, $date_de_naissance, $lieu_de_naissance, $numero_securite_sociale, $idMedecin]);
                 if ($test == false) {
                     $stmt->debugDumpParams();
                     die("Erreur Execute");
@@ -100,7 +103,7 @@
 
                 // Vérification de l'insertion
                 if ($stmt->rowCount() > 0) {
-                    echo "Le patient a été ajouté avec succès. <br>";
+                    echo "Le patient a ete ajoute avec succes. <br>";
                     echo '<a href="saisie.html">Accueil</a>';
                 } else {
                     echo "Une erreur s'est produite lors de l'ajout du patient.";
@@ -113,6 +116,14 @@
 
         <!-- Formulaire HTML pour saisir un nouveau patient -->
         <form method="post" action="ajoutcontact.php">
+
+            <label for="civilite">Civilite :</label>
+            <select id="idCivilite" name="civilite">
+                <!-- Remplacez les options ci-dessous par les médecins de votre base de données -->
+                <option value="1">Monsieur</option>
+                <option value="2">Madame</option>
+                <!-- Ajoutez d'autres options si nécessaire -->
+            </select>
             <label for="nom">Nom :</label>
             <input type="text" id="nom" name="nom" required>
 
